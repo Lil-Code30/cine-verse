@@ -1,7 +1,17 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Index from "./pages/Index";
+import WatchList from "./pages/WatchList";
+
 function App() {
   return (
     <>
-      <h1 class="text-3xl text-center font-bold underline">Hello world!</h1>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/watchlist" element={<WatchList />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }

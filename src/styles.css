@@ -1,1 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
 @import "tailwindcss";
+
+@theme {
+  --font-inter: "Inter", sans-serif;
+}
+
+@layer base {
+  * {
+    @apply m-0 p-0 box-content font-inter;
+  }
+  header {
+    @apply text-white h-[200px] flex justify-around items-center;
+    background: rgba(0, 0, 0, 0.838) url("../src/assets/images/home-hero.png")
+      center/cover no-repeat;
+  }
+}
+
+@layer utilities {
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+}
