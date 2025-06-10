@@ -2,9 +2,9 @@ import NoPoster from "../assets/images/noposter.png";
 import { useState } from "react";
 
 export default function MovieCard({ movie }) {
-  const watchListDB = JSON.parse(localStorage.getItem("watchlist")) || [];
-
-  const [watchList, setWatchList] = useState(watchListDB);
+  const [watchList, setWatchList] = useState(
+    JSON.parse(localStorage.getItem("watchlist")) || []
+  );
 
   const imageURL = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
@@ -20,12 +20,14 @@ export default function MovieCard({ movie }) {
   // function to add a movie to the watchList
   const handleWatchList = () => {
     setWatchList((prevValue) => {
-      console.log(prevValue);
       return [...prevValue, movie];
     });
-
-    localStorage.setItem("watchlist", JSON.stringify(watchList));
   };
+
+  localStorage.setItem("watchlist", JSON.stringify(watchList));
+
+  // verify if a movie is already in the watchlist
+  const isInWatchList = watchList.find((el) => el.id === movie.id);
 
   return (
     <div className="flex gap-x-4  items-center last-of-type:border-b-0 border-b-2 border-gray-400/50 pb-5 my-3">
@@ -61,21 +63,39 @@ export default function MovieCard({ movie }) {
               movie.original_language.slice(1)}
           </span>
           <span>{returnYear(movie.release_date)}</span>
-          <button onClick={handleWatchList} className="flex-center gap-x-0.5">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="size-5"
-            >
-              <path
-                fillRule="evenodd"
-                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span>Watchlist</span>
-          </button>
+          {isInWatchList ? (
+            <button className="flex-center gap-x-0.5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="size-5"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm3 10.5a.75.75 0 0 0 0-1.5H9a.75.75 0 0 0 0 1.5h6Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>Remove</span>
+            </button>
+          ) : (
+            <button onClick={handleWatchList} className="flex-center gap-x-0.5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="size-5"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>Watchlist</span>
+            </button>
+          )}
         </div>
         <p className="line-clamp-5 text-gray-600">{movie.overview}</p>
       </div>
