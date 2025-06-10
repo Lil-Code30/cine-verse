@@ -1,15 +1,31 @@
 import NoPoster from "../assets/images/noposter.png";
+import { useState } from "react";
 
 export default function MovieCard({ movie }) {
+  const watchListDB = JSON.parse(localStorage.getItem("watchlist")) || [];
+
+  const [watchList, setWatchList] = useState(watchListDB);
+
   const imageURL = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : `${NoPoster}`;
 
+  // function to return the year of release
   function returnYear(date) {
     let wholeDate = new Date(date);
 
     return wholeDate.getFullYear();
   }
+
+  // function to add a movie to the watchList
+  const handleWatchList = () => {
+    setWatchList((prevValue) => {
+      console.log(prevValue);
+      return [...prevValue, movie];
+    });
+
+    localStorage.setItem("watchlist", JSON.stringify(watchList));
+  };
 
   return (
     <div className="flex gap-x-4  items-center last-of-type:border-b-0 border-b-2 border-gray-400/50 pb-5 my-3">
@@ -45,7 +61,7 @@ export default function MovieCard({ movie }) {
               movie.original_language.slice(1)}
           </span>
           <span>{returnYear(movie.release_date)}</span>
-          <button className="flex-center gap-x-0.5">
+          <button onClick={handleWatchList} className="flex-center gap-x-0.5">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"

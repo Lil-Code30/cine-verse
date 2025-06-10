@@ -20,39 +20,47 @@ export default function Index() {
     },
   };
 
+  // fetch movie data
+  const fetchMovieData = async (movie) => {
+    try {
+      const res = await fetch(
+        `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
+          movie
+        )}`,
+        API_OPTIONS
+      );
+      const data = await res.json();
+
+      if (data.results.length === 0) {
+        setErrorMsg(
+          `Unable to find what you’re looking for. Please try another search`
+        );
+        return;
+      }
+      setAllMovies(data.results);
+    } catch (err) {
+      setErrorMsg(`Failed : ${err}`);
+    }
+  };
+
   // function to handle the form
-  function handleSubmit(formData) {
+  async function handleSubmit(formData) {
     const movie = formData.get("movie");
     if (!movie) {
       setErrorMsg("Please enter a movie name");
       return;
     }
-
-    try {
-      fetch(
-        `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
-          movie
-        )}`,
-        API_OPTIONS
-      )
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          if (data.results.length === 0) {
-            setErrorMsg(
-              `Unable to find what you’re looking for. Please try another search`
-            );
-          }
-          return setAllMovies(data.results);
-        });
-    } catch (err) {
-      setErrorMsg(`Failed : ${err}`);
-    }
+    await fetchMovieData(movie);
   }
 
   //useEffect to constantly fetch for data when the input change
-  // 🔼🔼🔼
+  // useEffect(() => {
+  //   async function loadMovies() {
+  //     await fetchMovieData(movie);
+  //   }
+
+  //   loadMovies();
+  // }, [movie]);
 
   // movie card mapping
   const movieCardEl = allMovies.map((movie) => {
@@ -70,7 +78,7 @@ export default function Index() {
       <main className="flex flex-col item-center justify-center">
         <form
           action={handleSubmit}
-          className="bg-white gap-x-1 -translate-y-6 w-[80%] lg:w-[50%] h-[40px] mx-auto flex justify-between border border-gray-500 rounded"
+          className="bg-white gap-x-1 -translate-y-6 w-[80%] md:w-[60%] lg:w-[50%] h-[40px] mx-auto flex justify-between border border-gray-500 rounded"
         >
           <div className="flex ml-1 items-center text-gray-800 gap-x-1 w-[90%] ">
             <svg

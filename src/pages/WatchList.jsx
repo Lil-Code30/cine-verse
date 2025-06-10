@@ -1,8 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+import MovieCard from "../components/MovieCard";
+
 export default function WatchList() {
   const [watchList, setWatchList] = useState([]);
+
+  useEffect(() => {
+    const watchListDB = JSON.parse(localStorage.getItem("watchlist")) || [];
+    setWatchList(watchListDB);
+  }, []);
 
   return (
     <>
@@ -12,13 +19,15 @@ export default function WatchList() {
           Search for movies
         </Link>
       </header>
-      <main className="flex-center w-[80%] h-[50dvh] mx-auto">
+      <main className="flex-center w-[80%]  mx-auto">
         {watchList.length > 0 ? (
           <section>
-            <h1>WatchList goes here </h1>
+            {watchList.map((movie) => {
+              return <MovieCard key={movie.id} movie={movie} />;
+            })}
           </section>
         ) : (
-          <section className="flex-center flex-col gap-y-2">
+          <section className="flex-center flex-col gap-y-2 mt-10">
             <h3 className="text-2xl text-gray-400/50 font-bold">
               Your watchlist is looking a little empty...
             </h3>
