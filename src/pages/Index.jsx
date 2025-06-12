@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { nanoid } from "nanoid";
 
 import NoMovieImg from "../assets/images/no-movie.png";
 import MovieCard from "../components/MovieCard";
+
+import { useDebounce } from "../assets/CustomHooks";
+import { fetchMovieData, fetchPopularMovies } from "../assets/api";
 
 export default function Index({
   watchList,
@@ -13,39 +17,9 @@ export default function Index({
   const [movie, setMovie] = useState("");
   const [allMovies, setAllMovies] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
+  const [popularMovies, setPopularMovies] = useState([]);
 
-  // static variables
-  const API_KEY = import.meta.env.VITE_API_KEY;
-  const API_OPTIONS = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${API_KEY}`,
-    },
-  };
-
-  // fetch movie data
-  const fetchMovieData = async (movie) => {
-    try {
-      const res = await fetch(
-        `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
-          movie
-        )}`,
-        API_OPTIONS
-      );
-      const data = await res.json();
-
-      if (data.results.length === 0) {
-        setErrorMsg(
-          `Unable to find what you’re looking for. Please try another search`
-        );
-        return;
-      }
-      setAllMovies(data.results);
-    } catch (err) {
-      setErrorMsg(`Failed : ${err}`);
-    }
-  };
+  const debounceInput = useDebounce(movie, 500);
 
   // function to handle the form
   async function handleSubmit(formData) {
@@ -54,7 +28,22 @@ export default function Index({
       setErrorMsg("Please enter a movie name");
       return;
     }
-    await fetchMovieData(movie);
+
+    try {
+      const data = await fetchMovieData(movie);
+
+      if (data.results.length === 0) {
+        setErrorMsg(
+          `Unable to find what you’re looking for. Please try another search`
+        );
+        return;
+      }
+
+      setAllMovies(data.results);
+      setErrorMsg(""); // initialize the error msg back to default value
+    } catch (err) {
+      setErrorMsg(`failed : ${err}`);
+    }
   }
 
   // movie card mapping
@@ -67,6 +56,64 @@ export default function Index({
         addMovieToWatchList={addMovieToWatchList}
         removeMovieFromWatchList={removeMovieFromWatchList}
       />
+    );
+  });
+
+  // display movies when the user type
+  useEffect(() => {
+    async function displayMovie() {
+      if (debounceInput) {
+        try {
+          const data = await fetchMovieData(debounceInput);
+
+          if (data.results.length === 0) {
+            setErrorMsg(
+              `Unable to find what you’re looking for. Please try another search`
+            );
+            return;
+          }
+
+          setAllMovies(data.results);
+          setErrorMsg(""); // initialize the error msg back to default value
+        } catch (err) {
+          setErrorMsg(`failed : ${err}`);
+        }
+      }
+    }
+
+    displayMovie();
+  }, [debounceInput]);
+
+  //display popular movie
+  useEffect(() => {
+    async function displayPopularMovies() {
+      try {
+        const data = await fetchPopularMovies();
+
+        setPopularMovies(data);
+      } catch (err) {
+        setErrorMsg(`Failed to fetch popular movies. ${err}`);
+      }
+    }
+
+    displayPopularMovies();
+  }, []);
+
+  const popularMoviesElements = popularMovies.map((el, index) => {
+    return (
+      <div key={nanoid()} className="relative">
+        <h1 className="absolute text-6xl font-extrabold bottom-12 ml-2 text-indigo-600 bg-black rounded px-1">
+          {index + 1}
+        </h1>
+        <div>
+          <img
+            className="rounded-lg"
+            src={`https://image.tmdb.org/t/p/w500${el.poster_path}`}
+            alt={el.title}
+          />
+          <h2>{el.title}</h2>
+        </div>
+      </div>
     );
   });
 
@@ -112,6 +159,13 @@ export default function Index({
             Search
           </button>
         </form>
+        <section className=" mx-3 ">
+          <h1 className="my-1.5 text-3xl font-semibold">Top 05 Movies</h1>
+          <div className="flex item-center justify-center gap-x-2.5">
+            {popularMoviesElements}
+          </div>
+          <hr className="border border-gray-400 mt-5 rounded" />
+        </section>
         <section className="px-8 md:w-[80%] mx-auto my-3">
           {errorMsg ? (
             <h2 className="text-red-500 text-2xl font-bold">{errorMsg}</h2>

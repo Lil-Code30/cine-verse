@@ -16,7 +16,6 @@ export default function MovieCard({
 
     return wholeDate.getFullYear();
   }
-  console.log(watchList);
   // verify if a movie is already in the watchlist
   const isInWatchList = watchList.find((el) => el.id === movie.id);
 
