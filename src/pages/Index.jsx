@@ -158,14 +158,14 @@ export default function Index({
             Search
           </button>
         </form>
-        <section className=" mb-8 h-[20dvh]  md:h-[50dvh]">
+        <section className=" mb-8 h-[35dvh]  md:h-[50dvh]">
           <h1 className="my-1.5 ml-1 text-3xl font-semibold">Top 05 Movies</h1>
           <div className="flex item-center w-contain gap-x-2 overflow-x-auto px-2 md:overflow-x-visible">
             {popularMoviesElements}
           </div>
         </section>
 
-        <section className="px-8 md:w-[80%] mx-auto my-3">
+        <section className="px-8 md:w-[80%] mx-auto mt-3 pb-3">
           {errorMsg ? (
             <h2 className="text-red-500 text-2xl font-bold">{errorMsg}</h2>
           ) : movie ? (

@@ -23,14 +23,16 @@ export default function MovieCard({
     <div className="flex gap-x-4  items-center last-of-type:border-b-0 border-b-2 border-gray-400/50 pb-5 my-3">
       <div>
         <img
-          className="max-w-[215px] h-[325px] rounded-xl"
+          className="max-w-[120px] md:max-w-[215px] md:h-[325px] md:rounded-xl rounded-lg"
           src={imageURL}
           alt={movie.title}
         />
       </div>
-      <div className="self-start mt-6">
+      <div className="self-start md:mt-6">
         <div className="flex items-center mb-2.5">
-          <h1 className="md:text-2xl font-semibold mr-4">{movie.title}</h1>{" "}
+          <h1 className="md:text-2xl text-sm font-semibold mr-4">
+            {movie.title}
+          </h1>
           <h5 className="flex-center self-center gap-x-1.5">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +95,9 @@ export default function MovieCard({
             </button>
           )}
         </div>
-        <p className="line-clamp-5 text-gray-600">{movie.overview}</p>
+        <p className="line-clamp-3 md:line-clamp-5 text-gray-600">
+          {movie.overview}
+        </p>
       </div>
     </div>
   );
