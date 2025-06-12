@@ -1,16 +1,12 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import MovieCard from "../components/MovieCard";
 
-export default function WatchList() {
-  const [watchList, setWatchList] = useState([]);
-
-  useEffect(() => {
-    const watchListDB = JSON.parse(localStorage.getItem("watchlist")) || [];
-    setWatchList(watchListDB);
-  }, []);
-
+export default function WatchList({
+  watchList,
+  addMovieToWatchList,
+  removeMovieFromWatchList,
+}) {
   return (
     <>
       <header>
@@ -23,7 +19,15 @@ export default function WatchList() {
         {watchList.length > 0 ? (
           <section>
             {watchList.map((movie) => {
-              return <MovieCard key={movie.id} movie={movie} />;
+              return (
+                <MovieCard
+                  key={movie.id}
+                  movie={movie}
+                  watchList={watchList}
+                  addMovieToWatchList={addMovieToWatchList}
+                  removeMovieFromWatchList={removeMovieFromWatchList}
+                />
+              );
             })}
           </section>
         ) : (

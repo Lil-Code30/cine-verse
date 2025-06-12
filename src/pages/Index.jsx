@@ -1,10 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import NoMovieImg from "../assets/images/no-movie.png";
 import MovieCard from "../components/MovieCard";
 
-export default function Index() {
+export default function Index({
+  watchList,
+  addMovieToWatchList,
+  removeMovieFromWatchList,
+}) {
   //state
   const [movie, setMovie] = useState("");
   const [allMovies, setAllMovies] = useState([]);
@@ -53,18 +57,17 @@ export default function Index() {
     await fetchMovieData(movie);
   }
 
-  //useEffect to constantly fetch for data when the input change
-  // useEffect(() => {
-  //   async function loadMovies() {
-  //     await fetchMovieData(movie);
-  //   }
-
-  //   loadMovies();
-  // }, [movie]);
-
   // movie card mapping
   const movieCardEl = allMovies.map((movie) => {
-    return <MovieCard key={movie.id} movie={movie} />;
+    return (
+      <MovieCard
+        key={movie.id}
+        movie={movie}
+        watchList={watchList}
+        addMovieToWatchList={addMovieToWatchList}
+        removeMovieFromWatchList={removeMovieFromWatchList}
+      />
+    );
   });
 
   return (

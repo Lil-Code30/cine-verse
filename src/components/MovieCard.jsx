@@ -1,11 +1,11 @@
 import NoPoster from "../assets/images/noposter.png";
-import { useState, useEffect } from "react";
 
-export default function MovieCard({ movie }) {
-  const [watchList, setWatchList] = useState(
-    JSON.parse(localStorage.getItem("watchlist")) || []
-  );
-
+export default function MovieCard({
+  movie,
+  watchList,
+  addMovieToWatchList,
+  removeMovieFromWatchList,
+}) {
   const imageURL = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : `${NoPoster}`;
@@ -16,28 +16,9 @@ export default function MovieCard({ movie }) {
 
     return wholeDate.getFullYear();
   }
-
-  // function to add a movie to the watchList
-  const handleWatchList = () => {
-    setWatchList((prevValue) => {
-      let newArr = [...prevValue, movie];
-      return newArr;
-    });
-  };
-
+  console.log(watchList);
   // verify if a movie is already in the watchlist
   const isInWatchList = watchList.find((el) => el.id === movie.id);
-
-  // remove a movie from the watchlist
-  const removeMovie = (id) => {
-    setWatchList(watchList.filter((el) => el.id !== id));
-  };
-
-  // store the watch list to the localstorage
-  useEffect(() => {
-    setWatchList(watchList);
-    localStorage.setItem("watchlist", JSON.stringify(watchList));
-  }, [watchList]);
 
   return (
     <div className="flex gap-x-4  items-center last-of-type:border-b-0 border-b-2 border-gray-400/50 pb-5 my-3">
@@ -75,7 +56,7 @@ export default function MovieCard({ movie }) {
           <span>{returnYear(movie.release_date)}</span>
           {isInWatchList ? (
             <button
-              onClick={() => removeMovie(movie.id)}
+              onClick={() => removeMovieFromWatchList(movie.id)}
               className="flex-center gap-x-0.5"
             >
               <svg
@@ -93,7 +74,10 @@ export default function MovieCard({ movie }) {
               <span>Remove</span>
             </button>
           ) : (
-            <button onClick={handleWatchList} className="flex-center gap-x-0.5">
+            <button
+              onClick={() => addMovieToWatchList(movie)}
+              className="flex-center gap-x-0.5"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
