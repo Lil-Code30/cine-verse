@@ -105,9 +105,9 @@ export default function Index({
         <h1 className="absolute  md:text-6xl font-extrabold top-0  text-indigo-600 bg-black rounded px-1">
           {index + 1}
         </h1>
-        <div className="min-w-[80px] max-h-[140px]">
+        <div className="min-w-[130px] max-h-[210px] pb-2">
           <img
-            className="rounded-lg"
+            className="rounded w-full"
             src={`https://image.tmdb.org/t/p/w500${el.poster_path}`}
             alt={el.title}
           />
