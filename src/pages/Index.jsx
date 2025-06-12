@@ -102,16 +102,15 @@ export default function Index({
   const popularMoviesElements = popularMovies.map((el, index) => {
     return (
       <div key={nanoid()} className="relative">
-        <h1 className="absolute text-6xl font-extrabold bottom-12 ml-2 text-indigo-600 bg-black rounded px-1">
+        <h1 className="absolute  md:text-6xl font-extrabold top-0  text-indigo-600 bg-black rounded px-1">
           {index + 1}
         </h1>
-        <div>
+        <div className="min-w-[80px] max-h-[140px]">
           <img
             className="rounded-lg"
             src={`https://image.tmdb.org/t/p/w500${el.poster_path}`}
             alt={el.title}
           />
-          <h2>{el.title}</h2>
         </div>
       </div>
     );
@@ -159,13 +158,13 @@ export default function Index({
             Search
           </button>
         </form>
-        <section className=" mx-3 ">
-          <h1 className="my-1.5 text-3xl font-semibold">Top 05 Movies</h1>
-          <div className="flex item-center justify-center gap-x-2.5">
+        <section className=" mb-8 h-[20dvh]  md:h-[50dvh]">
+          <h1 className="my-1.5 ml-1 text-3xl font-semibold">Top 05 Movies</h1>
+          <div className="flex item-center w-contain gap-x-2 overflow-x-auto px-2 md:overflow-x-visible">
             {popularMoviesElements}
           </div>
-          <hr className="border border-gray-400 mt-5 rounded" />
         </section>
+
         <section className="px-8 md:w-[80%] mx-auto my-3">
           {errorMsg ? (
             <h2 className="text-red-500 text-2xl font-bold">{errorMsg}</h2>
